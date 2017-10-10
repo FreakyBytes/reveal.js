@@ -96,9 +96,13 @@ module.exports = function(grunt) {
 			server: {
 				options: {
 					port: port,
-					base: root,
+					// also serve the subdir `slides/` as if it would be in the root dir
+					base: root.reduce((newbase, rootentry) => newbase.concat(['/slides', ''].map(path => rootentry + path)), []),
 					livereload: true,
-					open: true
+					open: false,
+					// add support for notes-server
+					middleware: [ require('plugin/integrated-notes-server/index.js').middleware ],
+					onCreateServer: require('plugin/integrated-notes-server/index.js').setupIO,
 				}
 			},
 
