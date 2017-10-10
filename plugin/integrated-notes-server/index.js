@@ -1,12 +1,12 @@
 var fs        = require('fs');
-var io        = require('socket.io');
+
 var Mustache  = require('mustache');
 
 
 // sets up the socketIO server. To be called in grunt:connect onCreateServer
 var setupIO = function( server, connect, options ) {
-    var socketIo = io.listen(server);
-    socketIo.socket.on('connection', handleSocketIO)
+    var io = require('socket.io').listen(server);
+    io.on('connection', handleSocketIO);
 }
 
 // handles the socketIO stuff
@@ -43,5 +43,7 @@ var middleware = function( req, res, next ) {
 }
 
 // export relevant functions
-module.exports.setupIO = setupIO;
-module.exports.middleware = middleware;
+module.exports = {
+    setupIO: setupIO,
+    middleware: middleware,
+}

@@ -101,8 +101,15 @@ module.exports = function(grunt) {
 					livereload: true,
 					open: false,
 					// add support for notes-server
-					middleware: [ require('plugin/integrated-notes-server/index.js').middleware ],
-					onCreateServer: require('plugin/integrated-notes-server/index.js').setupIO,
+					middleware: function( connect, options, middleware ) {
+						var notes_server = require('./plugin/integrated-notes-server/index.js');
+						middleware.unshift(notes_server.middleware);
+						return middleware;
+					},
+					onCreateServer: function( server, connect, options ) {
+						var notes_server = require('./plugin/integrated-notes-server/index.js');
+						notes_server.setupIO(server, connect, options);
+					},
 				}
 			},
 
